@@ -5,6 +5,7 @@ import {
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 
 import "./components/market-page.js";
+import "./components/toggle-theme.js";
 
 class CryptoLensDashboard extends LitElement {
   static properties = {
@@ -64,21 +65,6 @@ class CryptoLensDashboard extends LitElement {
     h1 {
       margin: 0;
       font-size: 1.8rem;
-    }
-
-    .theme-button {
-      padding: 9px 14px;
-      border: 1px solid var(--accent-colour);
-      border-radius: 8px;
-      background: transparent;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .theme-button:hover {
-      background-color: var(--accent-colour);
-      color: #111827;
     }
 
     nav {
@@ -194,33 +180,26 @@ class CryptoLensDashboard extends LitElement {
   constructor() {
     super();
 
-    this.darkMode = false;
+    const savedTheme = localStorage.getItem("cryptolens_theme");
+
+    this.darkMode = savedTheme === "dark";
     this.activePage = "home";
   }
 
   connectedCallback() {
     super.connectedCallback();
 
-    const savedTheme = localStorage.getItem("cryptolens_theme");
-
-    this.darkMode = savedTheme === "dark";
-
     this.applyTheme();
   }
 
   updated(changedProperties) {
     if (changedProperties.has("darkMode")) {
-      localStorage.setItem(
-        "cryptolens_theme",
-        this.darkMode ? "dark" : "light",
-      );
-
       this.applyTheme();
     }
   }
 
-  toggleTheme() {
-    this.darkMode = !this.darkMode;
+  handleThemeChange(event) {
+    this.darkMode = event.detail.darkMode;
   }
 
   applyTheme() {
@@ -259,8 +238,9 @@ class CryptoLensDashboard extends LitElement {
         <h2>Understand cryptocurrency more easily</h2>
 
         <p>
-          Explore cryptocurrency prices, compare digital assets, discover
-          trending coins and follow important crypto news in one place.
+          Explore cryptocurrency prices, compare digital assets,
+          discover trending coins and follow important crypto news
+          in one place.
         </p>
 
         <div class="home-buttons">
@@ -335,19 +315,16 @@ class CryptoLensDashboard extends LitElement {
         <div class="brand">
           <img
             class="logo"
-            src="../img/CryptoLens Icon.png"
+            src="./img/CryptoLens Icon.png"
             alt="CryptoLens logo"
           />
 
           <h1>CryptoLens</h1>
         </div>
 
-        <button
-          class="theme-button"
-          @click=${this.toggleTheme}
-        >
-          ${this.darkMode ? "Light Mode" : "Dark Mode"}
-        </button>
+        <toggle-theme
+          @theme-change=${this.handleThemeChange}
+        ></toggle-theme>
       </header>
 
       <nav>
