@@ -4,6 +4,8 @@ import {
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 
+import "./components/market-page.js";
+
 class CryptoLensDashboard extends LitElement {
   static properties = {
     darkMode: { type: Boolean },
@@ -291,10 +293,9 @@ class CryptoLensDashboard extends LitElement {
 
   renderPage() {
     if (this.activePage === "market") {
-      return this.renderPlaceholderPage(
-        "Crypto Market",
-        "The cryptocurrency market page will be added in the next commit.",
-      );
+      return html`
+        <market-page></market-page>
+      `;
     }
 
     if (this.activePage === "compare") {
