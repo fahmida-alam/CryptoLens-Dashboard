@@ -6,198 +6,185 @@ import {
 
 class CryptoLensDashboard extends LitElement {
   static properties = {
-    header: { type: String },
+    darkMode: { type: Boolean },
     activePage: { type: String },
   };
 
   static styles = css`
     :host {
+      --page-background: #ffffff;
+      --header-background: #111827;
+      --card-background: #ffffff;
+      --main-text: #111827;
+      --body-text: #4b5563;
+      --border-colour: #e5e7eb;
+      --accent-colour: #facc15;
+
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      width: 100%;
-      font-family: Arial, sans-serif;
-      color: #374151;
-      background-color: #f9fafb;
+      background-color: var(--page-background);
+      color: var(--body-text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :host(.dark-mode) {
+      --page-background: #0f172a;
+      --header-background: #020617;
+      --card-background: #1e293b;
+      --main-text: #f8fafc;
+      --body-text: #cbd5e1;
+      --border-colour: #334155;
     }
 
     header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 20px 40px;
-      background-color: #111827;
+      align-items: center;
+      padding: 18px 30px;
+      background-color: var(--header-background);
       color: white;
-      border-bottom: 3px solid #facc15;
+      border-bottom: 3px solid var(--accent-colour);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .logo {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+    }
+
+    h1 {
       margin: 0;
-      font-size: 32px;
+      font-size: 1.8rem;
+    }
+
+    .theme-button {
+      padding: 9px 14px;
+      border: 1px solid var(--accent-colour);
+      border-radius: 8px;
+      background: transparent;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .theme-button:hover {
+      background-color: var(--accent-colour);
+      color: #111827;
     }
 
     nav {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      gap: 5px;
+      padding: 0 30px;
+      background-color: var(--card-background);
+      border-bottom: 1px solid var(--border-colour);
+      overflow-x: auto;
     }
 
-    nav button {
-      padding: 10px 14px;
-      font-size: 15px;
-      color: white;
-      background-color: transparent;
+    .nav-button {
+      padding: 16px 18px;
       border: none;
-      border-radius: 6px;
+      border-bottom: 3px solid transparent;
+      background: transparent;
+      color: var(--body-text);
+      font-size: 0.95rem;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    nav button:hover,
-    nav button.active {
-      color: #111827;
-      background-color: #facc15;
+    .nav-button:hover {
+      color: var(--main-text);
+    }
+
+    .nav-button.active {
+      color: var(--main-text);
+      border-bottom-color: var(--accent-colour);
     }
 
     main {
       flex: 1;
-      padding: 60px 40px;
+      padding: 35px 30px;
+      background-color: var(--page-background);
     }
 
-    .page-content {
-      max-width: 1100px;
+    .page {
+      max-width: 1200px;
+      min-height: 400px;
       margin: 0 auto;
-      text-align: center;
+      padding: 40px;
+      background-color: var(--card-background);
+      border: 1px solid var(--border-colour);
+      border-radius: 14px;
+      box-sizing: border-box;
     }
 
-    .page-content h2 {
+    .page h2 {
       margin-top: 0;
-      margin-bottom: 20px;
-      font-size: 42px;
-      color: #111827;
+      color: var(--main-text);
+      font-size: 2rem;
     }
 
-    .page-content p {
-      font-size: 18px;
-      line-height: 1.7;
-      color: #4b5563;
+    .page p {
+      max-width: 700px;
+      line-height: 1.6;
     }
 
-    .hero {
-      padding: 40px 20px 60px;
-    }
-
-    .hero-description {
-      max-width: 750px;
-      margin: 0 auto;
-    }
-
-    .hero-buttons {
+    .home-buttons {
       display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin-top: 30px;
+      gap: 12px;
+      margin-top: 24px;
     }
 
-    .primary-button,
-    .secondary-button {
-      padding: 13px 22px;
-      font-size: 16px;
+    .action-button {
+      padding: 12px 20px;
+      border: 1px solid var(--border-colour);
+      border-radius: 8px;
+      background-color: var(--card-background);
+      color: var(--main-text);
       font-weight: bold;
-      border-radius: 7px;
       cursor: pointer;
     }
 
     .primary-button {
+      border-color: var(--accent-colour);
+      background-color: var(--accent-colour);
       color: #111827;
-      background-color: #facc15;
-      border: 2px solid #facc15;
-    }
-
-    .primary-button:hover {
-      background-color: #eab308;
-      border-color: #eab308;
-    }
-
-    .secondary-button {
-      color: #111827;
-      background-color: transparent;
-      border: 2px solid #111827;
-    }
-
-    .secondary-button:hover {
-      color: white;
-      background-color: #111827;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 30px;
-    }
-
-    .feature-card {
-      padding: 28px;
-      text-align: left;
-      background-color: white;
-      border-radius: 10px;
-      border-top: 4px solid #facc15;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .feature-card h3 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      color: #111827;
-      font-size: 22px;
-    }
-
-    .feature-card p {
-      margin-bottom: 0;
-      font-size: 16px;
     }
 
     footer {
       padding: 18px;
-      text-align: center;
-      background-color: #111827;
+      background-color: var(--header-background);
       color: white;
-      border-top: 3px solid #facc15;
-      font-size: 14px;
+      text-align: center;
+      border-top: 3px solid var(--accent-colour);
     }
 
-    @media (max-width: 850px) {
+    @media (max-width: 650px) {
       header {
-        flex-direction: column;
-        gap: 18px;
-        padding: 20px;
+        padding: 14px 16px;
       }
 
       nav {
-        flex-wrap: wrap;
-        justify-content: center;
+        padding: 0 8px;
+      }
+
+      .nav-button {
+        padding: 14px 12px;
       }
 
       main {
-        padding: 40px 20px;
+        padding: 20px 14px;
       }
 
-      .page-content h2 {
-        font-size: 32px;
-      }
-
-      .features {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .primary-button,
-      .secondary-button {
-        width: 220px;
+      .page {
+        padding: 25px 20px;
       }
     }
   `;
@@ -205,129 +192,137 @@ class CryptoLensDashboard extends LitElement {
   constructor() {
     super();
 
-    this.header = "CryptoLens";
+    this.darkMode = false;
     this.activePage = "home";
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    const savedTheme = localStorage.getItem("cryptolens_theme");
+
+    this.darkMode = savedTheme === "dark";
+
+    this.applyTheme();
+  }
+
+  updated(changedProperties) {
+    if (changedProperties.has("darkMode")) {
+      localStorage.setItem(
+        "cryptolens_theme",
+        this.darkMode ? "dark" : "light",
+      );
+
+      this.applyTheme();
+    }
+  }
+
+  toggleTheme() {
+    this.darkMode = !this.darkMode;
+  }
+
+  applyTheme() {
+    this.classList.toggle("dark-mode", this.darkMode);
+
+    document.body.style.margin = "0";
+
+    document.body.style.backgroundColor = this.darkMode
+      ? "#0f172a"
+      : "#ffffff";
   }
 
   changePage(pageName) {
     this.activePage = pageName;
   }
 
+  renderNavigationButton(pageName, buttonText) {
+    const buttonClass =
+      this.activePage === pageName
+        ? "nav-button active"
+        : "nav-button";
+
+    return html`
+      <button
+        class=${buttonClass}
+        @click=${() => this.changePage(pageName)}
+      >
+        ${buttonText}
+      </button>
+    `;
+  }
+
   renderHomePage() {
     return html`
-      <section class="page-content">
-        <div class="hero">
-          <h2>Understand the cryptocurrency market</h2>
+      <section class="page">
+        <h2>Understand cryptocurrency more easily</h2>
 
-          <p class="hero-description">
-            Explore cryptocurrency prices, compare coins, discover trending
-            assets, and read the latest crypto news in one place.
-          </p>
+        <p>
+          Explore cryptocurrency prices, compare digital assets, discover
+          trending coins and follow important crypto news in one place.
+        </p>
 
-          <div class="hero-buttons">
-            <button
-              class="primary-button"
-              @click=${() => this.changePage("market")}
-            >
-              Explore Market
-            </button>
+        <div class="home-buttons">
+          <button
+            class="action-button primary-button"
+            @click=${() => this.changePage("market")}
+          >
+            Explore Market
+          </button>
 
-            <button
-              class="secondary-button"
-              @click=${() => this.changePage("trending")}
-            >
-              View Trending Coins
-            </button>
-          </div>
+          <button
+            class="action-button"
+            @click=${() => this.changePage("compare")}
+          >
+            Compare Coins
+          </button>
         </div>
+      </section>
+    `;
+  }
 
-        <div class="features">
-          <article class="feature-card">
-            <h3>Market Overview</h3>
-            <p>
-              View cryptocurrency prices, trading volumes, and market
-              movements.
-            </p>
-          </article>
-
-          <article class="feature-card">
-            <h3>Coin Comparison</h3>
-            <p>
-              Compare different cryptocurrencies and understand their market
-              performance.
-            </p>
-          </article>
-
-          <article class="feature-card">
-            <h3>Latest Trends</h3>
-            <p>
-              Discover popular cryptocurrencies and recent developments in the
-              market.
-            </p>
-          </article>
-        </div>
+  renderPlaceholderPage(title, description) {
+    return html`
+      <section class="page">
+        <h2>${title}</h2>
+        <p>${description}</p>
       </section>
     `;
   }
 
   renderPage() {
     if (this.activePage === "market") {
-      return html`
-        <section class="page-content">
-          <h2>Cryptocurrency Market</h2>
-          <p>
-            View cryptocurrency prices, market capitalisation, trading volume,
-            and price movements.
-          </p>
-        </section>
-      `;
+      return this.renderPlaceholderPage(
+        "Crypto Market",
+        "The cryptocurrency market page will be added in the next commit.",
+      );
     }
 
     if (this.activePage === "compare") {
-      return html`
-        <section class="page-content">
-          <h2>Compare Coins</h2>
-          <p>
-            Compare the prices and market performance of different
-            cryptocurrencies.
-          </p>
-        </section>
-      `;
+      return this.renderPlaceholderPage(
+        "Compare Coins",
+        "The coin comparison feature will be added later.",
+      );
     }
 
     if (this.activePage === "trending") {
-      return html`
-        <section class="page-content">
-          <h2>Trending Coins</h2>
-          <p>
-            Discover which cryptocurrencies are currently receiving the most
-            attention.
-          </p>
-        </section>
-      `;
+      return this.renderPlaceholderPage(
+        "Trending Coins",
+        "Trending cryptocurrency data will appear here.",
+      );
     }
 
     if (this.activePage === "news") {
-      return html`
-        <section class="page-content">
-          <h2>Crypto News</h2>
-          <p>
-            Read recent news and updates from the cryptocurrency industry.
-          </p>
-        </section>
-      `;
+      return this.renderPlaceholderPage(
+        "Crypto News",
+        "Recent cryptocurrency news will appear here.",
+      );
     }
 
     if (this.activePage === "about") {
-      return html`
-        <section class="page-content">
-          <h2>About CryptoLens</h2>
-          <p>
-            CryptoLens is a cryptocurrency information website designed to
-            make market data easier to understand.
-          </p>
-        </section>
-      `;
+      return this.renderPlaceholderPage(
+        "About CryptoLens",
+        "CryptoLens helps users understand cryptocurrency market information.",
+      );
     }
 
     return this.renderHomePage();
@@ -336,62 +331,45 @@ class CryptoLensDashboard extends LitElement {
   render() {
     return html`
       <header>
-        <h1 class="logo">${this.header}</h1>
+        <div class="brand">
+          <img
+            class="logo"
+            src="../img/CryptoLens Icon.png"
+            alt="CryptoLens logo"
+          />
 
-        <nav>
-          <button
-            class=${this.activePage === "home" ? "active" : ""}
-            @click=${() => this.changePage("home")}
-          >
-            Home
-          </button>
+          <h1>CryptoLens</h1>
+        </div>
 
-          <button
-            class=${this.activePage === "market" ? "active" : ""}
-            @click=${() => this.changePage("market")}
-          >
-            Market
-          </button>
-
-          <button
-            class=${this.activePage === "compare" ? "active" : ""}
-            @click=${() => this.changePage("compare")}
-          >
-            Compare
-          </button>
-
-          <button
-            class=${this.activePage === "trending" ? "active" : ""}
-            @click=${() => this.changePage("trending")}
-          >
-            Trending
-          </button>
-
-          <button
-            class=${this.activePage === "news" ? "active" : ""}
-            @click=${() => this.changePage("news")}
-          >
-            News
-          </button>
-
-          <button
-            class=${this.activePage === "about" ? "active" : ""}
-            @click=${() => this.changePage("about")}
-          >
-            About
-          </button>
-        </nav>
+        <button
+          class="theme-button"
+          @click=${this.toggleTheme}
+        >
+          ${this.darkMode ? "Light Mode" : "Dark Mode"}
+        </button>
       </header>
+
+      <nav>
+        ${this.renderNavigationButton("home", "Home")}
+        ${this.renderNavigationButton("market", "Market")}
+        ${this.renderNavigationButton("compare", "Compare")}
+        ${this.renderNavigationButton("trending", "Trending")}
+        ${this.renderNavigationButton("news", "News")}
+        ${this.renderNavigationButton("about", "About")}
+      </nav>
 
       <main>
         ${this.renderPage()}
       </main>
 
       <footer>
-        Fahmida Alam Web Development Project &copy; 2026
+        CryptoLens Web Development Project &copy; 2026
       </footer>
     `;
   }
 }
 
-customElements.define("crypto-lens-dashboard", CryptoLensDashboard);
+customElements.define(
+  "crypto-lens-dashboard",
+  CryptoLensDashboard,
+);
