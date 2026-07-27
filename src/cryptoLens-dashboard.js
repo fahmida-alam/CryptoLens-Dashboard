@@ -52,11 +52,7 @@ class CryptoLensDashboard extends LitElement {
       cursor: pointer;
     }
 
-    nav button:hover {
-      color: #111827;
-      background-color: #facc15;
-    }
-
+    nav button:hover,
     nav button.active {
       color: #111827;
       background-color: #facc15;
@@ -68,7 +64,7 @@ class CryptoLensDashboard extends LitElement {
     }
 
     .page-content {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
       text-align: center;
     }
@@ -84,6 +80,81 @@ class CryptoLensDashboard extends LitElement {
       font-size: 18px;
       line-height: 1.7;
       color: #4b5563;
+    }
+
+    .hero {
+      padding: 40px 20px 60px;
+    }
+
+    .hero-description {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      padding: 13px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .primary-button {
+      color: #111827;
+      background-color: #facc15;
+      border: 2px solid #facc15;
+    }
+
+    .primary-button:hover {
+      background-color: #eab308;
+      border-color: #eab308;
+    }
+
+    .secondary-button {
+      color: #111827;
+      background-color: transparent;
+      border: 2px solid #111827;
+    }
+
+    .secondary-button:hover {
+      color: white;
+      background-color: #111827;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 30px;
+    }
+
+    .feature-card {
+      padding: 28px;
+      text-align: left;
+      background-color: white;
+      border-radius: 10px;
+      border-top: 4px solid #facc15;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .feature-card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #111827;
+      font-size: 22px;
+    }
+
+    .feature-card p {
+      margin-bottom: 0;
+      font-size: 16px;
     }
 
     footer {
@@ -114,6 +185,20 @@ class CryptoLensDashboard extends LitElement {
       .page-content h2 {
         font-size: 32px;
       }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .primary-button,
+      .secondary-button {
+        width: 220px;
+      }
     }
   `;
 
@@ -126,6 +211,63 @@ class CryptoLensDashboard extends LitElement {
 
   changePage(pageName) {
     this.activePage = pageName;
+  }
+
+  renderHomePage() {
+    return html`
+      <section class="page-content">
+        <div class="hero">
+          <h2>Understand the cryptocurrency market</h2>
+
+          <p class="hero-description">
+            Explore cryptocurrency prices, compare coins, discover trending
+            assets, and read the latest crypto news in one place.
+          </p>
+
+          <div class="hero-buttons">
+            <button
+              class="primary-button"
+              @click=${() => this.changePage("market")}
+            >
+              Explore Market
+            </button>
+
+            <button
+              class="secondary-button"
+              @click=${() => this.changePage("trending")}
+            >
+              View Trending Coins
+            </button>
+          </div>
+        </div>
+
+        <div class="features">
+          <article class="feature-card">
+            <h3>Market Overview</h3>
+            <p>
+              View cryptocurrency prices, trading volumes, and market
+              movements.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <h3>Coin Comparison</h3>
+            <p>
+              Compare different cryptocurrencies and understand their market
+              performance.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <h3>Latest Trends</h3>
+            <p>
+              Discover popular cryptocurrencies and recent developments in the
+              market.
+            </p>
+          </article>
+        </div>
+      </section>
+    `;
   }
 
   renderPage() {
@@ -188,16 +330,7 @@ class CryptoLensDashboard extends LitElement {
       `;
     }
 
-    return html`
-      <section class="page-content">
-        <h2>Understand the cryptocurrency market</h2>
-
-        <p>
-          Explore cryptocurrency prices, compare coins, discover trending
-          assets, and read the latest crypto news in one place.
-        </p>
-      </section>
-    `;
+    return this.renderHomePage();
   }
 
   render() {
