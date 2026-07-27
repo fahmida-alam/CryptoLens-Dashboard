@@ -26,16 +26,17 @@ class MarketPage extends LitElement {
   static styles = css`
     :host {
       display: block;
-      color: var(--text-body, #374151);
+      color: var(--body-text, #4b5563);
     }
 
     .market-panel {
-      background-color: var(--card-bg, white);
-      border-radius: 14px;
-      box-shadow: var(
-        --shadow,
-        0 4px 12px rgba(0, 0, 0, 0.1)
+      background-color: var(
+        --card-background,
+        #ffffff
       );
+      border: 1px solid
+        var(--border-colour, #e5e7eb);
+      border-radius: 14px;
       overflow: hidden;
     }
 
@@ -45,19 +46,23 @@ class MarketPage extends LitElement {
       align-items: center;
       gap: 20px;
       padding: 24px;
+      background-color: var(
+        --card-background,
+        #ffffff
+      );
       border-bottom: 1px solid
-        var(--border-color, #e5e7eb);
+        var(--border-colour, #e5e7eb);
     }
 
     .market-title {
       margin: 0 0 6px 0;
-      color: var(--text-main, #111827);
+      color: var(--main-text, #111827);
       font-size: 1.8rem;
     }
 
     .market-description {
       margin: 0;
-      color: var(--text-soft, #6b7280);
+      color: var(--body-text, #6b7280);
       font-size: 0.95rem;
       line-height: 1.5;
     }
@@ -66,7 +71,10 @@ class MarketPage extends LitElement {
       padding: 10px 16px;
       border: none;
       border-radius: 8px;
-      background-color: var(--accent, #facc15);
+      background-color: var(
+        --accent-colour,
+        #facc15
+      );
       color: #111827;
       font-weight: bold;
       cursor: pointer;
@@ -84,8 +92,12 @@ class MarketPage extends LitElement {
 
     .search-section {
       padding: 16px 24px;
+      background-color: var(
+        --card-background,
+        #ffffff
+      );
       border-bottom: 1px solid
-        var(--border-color, #e5e7eb);
+        var(--border-colour, #e5e7eb);
     }
 
     .search-input {
@@ -93,40 +105,58 @@ class MarketPage extends LitElement {
       max-width: 420px;
       padding: 10px 12px;
       border: 1px solid
-        var(--input-border, #d1d5db);
+        var(--border-colour, #d1d5db);
       border-radius: 8px;
-      background-color: var(--input-bg, white);
-      color: var(--text-main, #111827);
+      background-color: var(
+        --page-background,
+        #ffffff
+      );
+      color: var(--main-text, #111827);
       font-size: 0.95rem;
       box-sizing: border-box;
       outline: none;
     }
 
+    .search-input::placeholder {
+      color: var(--body-text, #6b7280);
+    }
+
     .search-input:focus {
-      border-color: var(--accent, #facc15);
+      border-color: var(
+        --accent-colour,
+        #facc15
+      );
     }
 
     .table-wrapper {
       width: 100%;
       overflow-x: auto;
+      background-color: var(
+        --card-background,
+        #ffffff
+      );
     }
 
     table {
       width: 100%;
       min-width: 950px;
       border-collapse: collapse;
+      background-color: var(
+        --card-background,
+        #ffffff
+      );
     }
 
     thead {
       background-color: var(
-        --surface-bg,
+        --page-background,
         #f9fafb
       );
     }
 
     th {
       padding: 14px 16px;
-      color: var(--text-soft, #6b7280);
+      color: var(--body-text, #6b7280);
       font-size: 0.78rem;
       text-align: right;
       text-transform: uppercase;
@@ -137,8 +167,8 @@ class MarketPage extends LitElement {
     td {
       padding: 15px 16px;
       border-top: 1px solid
-        var(--border-color, #e5e7eb);
-      color: var(--text-main, #111827);
+        var(--border-colour, #e5e7eb);
+      color: var(--main-text, #111827);
       text-align: right;
       white-space: nowrap;
     }
@@ -154,9 +184,16 @@ class MarketPage extends LitElement {
       text-align: left;
     }
 
+    tbody tr {
+      background-color: var(
+        --card-background,
+        #ffffff
+      );
+    }
+
     tbody tr:hover {
       background-color: var(
-        --hover-bg,
+        --page-background,
         #fefce8
       );
     }
@@ -176,34 +213,38 @@ class MarketPage extends LitElement {
 
     .coin-name {
       font-weight: bold;
-      color: var(--text-main, #111827);
+      color: var(--main-text, #111827);
     }
 
     .coin-symbol {
       margin-left: 6px;
-      color: var(--text-soft, #6b7280);
+      color: var(--body-text, #6b7280);
       font-size: 0.78rem;
       text-transform: uppercase;
     }
 
     .positive {
-      color: green;
+      color: #16a34a;
       font-weight: bold;
     }
 
     .negative {
-      color: red;
+      color: #dc2626;
       font-weight: bold;
     }
 
     .message {
       padding: 50px 20px;
-      color: var(--text-soft, #6b7280);
+      background-color: var(
+        --card-background,
+        #ffffff
+      );
+      color: var(--body-text, #6b7280);
       text-align: center;
     }
 
     .error-message {
-      color: red;
+      color: #dc2626;
     }
 
     @media (max-width: 700px) {
@@ -250,13 +291,37 @@ class MarketPage extends LitElement {
       "market_coins_time",
     );
 
+    let cachedCoins = [];
+
+    try {
+      cachedCoins = cached
+        ? JSON.parse(cached)
+        : [];
+    } catch (error) {
+      console.error(
+        "Could not read cached market data:",
+        error,
+      );
+
+      cachedCoins = [];
+
+      localStorage.removeItem(
+        "market_coins",
+      );
+
+      localStorage.removeItem(
+        "market_coins_time",
+      );
+    }
+
     const cacheIsFresh =
-      cached &&
+      Array.isArray(cachedCoins) &&
+      cachedCoins.length > 0 &&
       cachedTime &&
       Date.now() - Number(cachedTime) < 300000;
 
     if (!forceRefresh && cacheIsFresh) {
-      this.coins = JSON.parse(cached);
+      this.coins = cachedCoins;
       this.loading = false;
       return;
     }
@@ -273,16 +338,25 @@ class MarketPage extends LitElement {
       })
       .then(
         function (json) {
+          if (
+            !Array.isArray(json) ||
+            json.length === 0
+          ) {
+            throw new Error(
+              "The API returned no cryptocurrency data.",
+            );
+          }
+
           this.coins = json;
 
           localStorage.setItem(
             "market_coins",
-            JSON.stringify(this.coins),
+            JSON.stringify(json),
           );
 
           localStorage.setItem(
             "market_coins_time",
-            Date.now(),
+            Date.now().toString(),
           );
 
           this.loading = false;
@@ -295,8 +369,10 @@ class MarketPage extends LitElement {
             err,
           );
 
+          this.coins = [];
+
           this.errorMessage =
-            "Could not load cryptocurrency market data.";
+            "Could not load cryptocurrency market data. Please press Refresh.";
 
           this.loading = false;
         }.bind(this),
@@ -389,6 +465,18 @@ class MarketPage extends LitElement {
   renderMarketTable() {
     const filteredCoins =
       this.getFilteredCoins();
+
+    if (
+      this.coins.length === 0 &&
+      !this.searchText
+    ) {
+      return html`
+        <div class="message">
+          No market data is available. Please press
+          Refresh.
+        </div>
+      `;
+    }
 
     if (filteredCoins.length === 0) {
       return html`
