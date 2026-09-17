@@ -686,7 +686,7 @@ class CryptoLensDashboard extends LitElement {
         <div class="brand">
           <img
             class="logo"
-            src="./img/CryptoLens Icon.png"
+            src="./img/CryptoLens_Icon.png"
             alt="CryptoLens logo"
           />
 
