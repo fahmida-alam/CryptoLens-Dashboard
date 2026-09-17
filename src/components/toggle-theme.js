@@ -10,36 +10,76 @@ class ToggleTheme extends LitElement {
   };
 
   static styles = css`
+    :host {
+      display: block;
+    }
+
+    .theme-options {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
     button {
-      padding: 9px 14px;
-      border: 1px solid var(--accent-colour, #facc15);
+      min-width: 110px;
+      padding: 12px 20px;
+      border: 1px solid
+        var(--border-colour, #e5e7eb);
       border-radius: 8px;
-      background: transparent;
-      color: white;
+      background-color: var(
+        --page-background,
+        #ffffff
+      );
+      color: var(--main-text, #111827);
       font-weight: bold;
       cursor: pointer;
     }
 
     button:hover {
-      background-color: var(--accent-colour, #facc15);
+      border-color: var(
+        --accent-colour,
+        #facc15
+      );
+    }
+
+    button.active {
+      border-color: var(
+        --accent-colour,
+        #facc15
+      );
+      background-color: var(
+        --accent-colour,
+        #facc15
+      );
       color: #111827;
+    }
+
+    @media (max-width: 500px) {
+      .theme-options {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
     }
   `;
 
   constructor() {
     super();
 
-    const savedTheme = localStorage.getItem("cryptolens_theme");
+    const savedTheme =
+      localStorage.getItem("cryptolens_theme");
 
     this.darkMode = savedTheme === "dark";
   }
 
-  toggleTheme() {
-    this.darkMode = !this.darkMode;
+  setTheme(darkMode) {
+    this.darkMode = darkMode;
 
     localStorage.setItem(
       "cryptolens_theme",
-      this.darkMode ? "dark" : "light",
+      darkMode ? "dark" : "light",
     );
 
     this.dispatchEvent(
@@ -55,11 +95,26 @@ class ToggleTheme extends LitElement {
 
   render() {
     return html`
-      <button @click=${this.toggleTheme}>
-        ${this.darkMode ? "Light Mode" : "Dark Mode"}
-      </button>
+      <div class="theme-options">
+        <button
+          class=${!this.darkMode ? "active" : ""}
+          @click=${() => this.setTheme(false)}
+        >
+          Light
+        </button>
+
+        <button
+          class=${this.darkMode ? "active" : ""}
+          @click=${() => this.setTheme(true)}
+        >
+          Dark
+        </button>
+      </div>
     `;
   }
 }
 
-customElements.define("toggle-theme", ToggleTheme);
+customElements.define(
+  "toggle-theme",
+  ToggleTheme,
+);

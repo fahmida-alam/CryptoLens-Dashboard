@@ -7,9 +7,9 @@ import {
 import "./components/market-page.js";
 import "./components/trending-page.js";
 import "./components/compare-page.js";
-import "./components/toggle-theme.js";
 import "./components/news-page.js";
 import "./components/about-page.js";
+import "./components/settings-page.js";
 
 class CryptoLensDashboard extends LitElement {
   static properties = {
@@ -46,7 +46,6 @@ class CryptoLensDashboard extends LitElement {
 
     header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       padding: 18px 30px;
       background-color: var(--header-background);
@@ -73,6 +72,7 @@ class CryptoLensDashboard extends LitElement {
 
     nav {
       display: flex;
+      align-items: center;
       gap: 5px;
       padding: 0 30px;
       background-color: var(--card-background);
@@ -89,6 +89,7 @@ class CryptoLensDashboard extends LitElement {
       font-size: 0.95rem;
       font-weight: bold;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .nav-button:hover {
@@ -98,6 +99,10 @@ class CryptoLensDashboard extends LitElement {
     .nav-button.active {
       color: var(--main-text);
       border-bottom-color: var(--accent-colour);
+    }
+
+    .settings-button {
+      margin-left: auto;
     }
 
     main {
@@ -171,6 +176,10 @@ class CryptoLensDashboard extends LitElement {
         padding: 14px 12px;
       }
 
+      .settings-button {
+        margin-left: 0;
+      }
+
       main {
         padding: 20px 14px;
       }
@@ -228,11 +237,17 @@ class CryptoLensDashboard extends LitElement {
   renderNavigationButton(
     pageName,
     buttonText,
+    extraClass = "",
   ) {
-    const buttonClass =
-      this.activePage === pageName
-        ? "nav-button active"
-        : "nav-button";
+    let buttonClass = "nav-button";
+
+    if (this.activePage === pageName) {
+      buttonClass += " active";
+    }
+
+    if (extraClass) {
+      buttonClass += ` ${extraClass}`;
+    }
 
     return html`
       <button
@@ -280,18 +295,6 @@ class CryptoLensDashboard extends LitElement {
     `;
   }
 
-  renderPlaceholderPage(
-    title,
-    description,
-  ) {
-    return html`
-      <section class="page">
-        <h2>${title}</h2>
-        <p>${description}</p>
-      </section>
-    `;
-  }
-
   renderPage() {
     if (this.activePage === "market") {
       return html`
@@ -323,6 +326,14 @@ class CryptoLensDashboard extends LitElement {
       `;
     }
 
+    if (this.activePage === "settings") {
+      return html`
+        <settings-page
+          @theme-change=${this.handleThemeChange}
+        ></settings-page>
+      `;
+    }
+
     return this.renderHomePage();
   }
 
@@ -338,11 +349,6 @@ class CryptoLensDashboard extends LitElement {
 
           <h1>CryptoLens</h1>
         </div>
-
-        <toggle-theme
-          @theme-change=${this
-            .handleThemeChange}
-        ></toggle-theme>
       </header>
 
       <nav>
@@ -375,6 +381,12 @@ class CryptoLensDashboard extends LitElement {
           "about",
           "About",
         )}
+
+        ${this.renderNavigationButton(
+          "settings",
+          "Settings",
+          "settings-button",
+        )}
       </nav>
 
       <main>
@@ -382,8 +394,7 @@ class CryptoLensDashboard extends LitElement {
       </main>
 
       <footer>
-        CryptoLens Web Development Project
-        &copy; 2026
+        CryptoLens &copy; 2026
       </footer>
     `;
   }
