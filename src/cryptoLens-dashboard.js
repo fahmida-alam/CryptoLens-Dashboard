@@ -115,28 +115,54 @@ class CryptoLensDashboard extends LitElement {
       max-width: 1200px;
       min-height: 400px;
       margin: 0 auto;
-      padding: 40px;
-      background-color: var(--card-background);
-      border: 1px solid var(--border-colour);
-      border-radius: 14px;
       box-sizing: border-box;
     }
 
-    .page h2 {
-      margin-top: 0;
-      color: var(--main-text);
-      font-size: 2rem;
+    /*
+     * HOME HERO
+     */
+
+    .home-hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 40px;
+      align-items: center;
+      padding: 55px 50px;
+      background-color: var(--card-background);
+      border: 1px solid var(--border-colour);
+      border-radius: 16px;
     }
 
-    .page p {
-      max-width: 700px;
-      line-height: 1.6;
+    .hero-label {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--body-text);
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-title {
+      max-width: 650px;
+      margin: 0;
+      color: var(--main-text);
+      font-size: 2.7rem;
+      line-height: 1.15;
+    }
+
+    .hero-description {
+      max-width: 650px;
+      margin: 20px 0 0 0;
+      color: var(--body-text);
+      font-size: 1.05rem;
+      line-height: 1.7;
     }
 
     .home-buttons {
       display: flex;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 28px;
     }
 
     .action-button {
@@ -149,10 +175,139 @@ class CryptoLensDashboard extends LitElement {
       cursor: pointer;
     }
 
+    .action-button:hover {
+      border-color: var(--accent-colour);
+    }
+
     .primary-button {
       border-color: var(--accent-colour);
       background-color: var(--accent-colour);
       color: #111827;
+    }
+
+    .primary-button:hover {
+      background-color: #eab308;
+    }
+
+    /*
+     * HERO VISUAL
+     */
+
+    .hero-visual {
+      padding: 28px;
+      background-color: var(--page-background);
+      border: 1px solid var(--border-colour);
+      border-radius: 14px;
+    }
+
+    .visual-heading {
+      margin: 0 0 20px 0;
+      color: var(--main-text);
+      font-size: 1rem;
+    }
+
+    .visual-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-colour);
+    }
+
+    .visual-row:last-child {
+      border-bottom: none;
+    }
+
+    .visual-label {
+      color: var(--body-text);
+      font-size: 0.9rem;
+    }
+
+    .visual-value {
+      color: var(--main-text);
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .visual-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 7px;
+      background-color: var(--accent-colour);
+      border-radius: 50%;
+    }
+
+    /*
+     * HOME FEATURES
+     */
+
+    .home-features {
+      margin-top: 35px;
+    }
+
+    .features-heading {
+      margin: 0 0 8px 0;
+      color: var(--main-text);
+      font-size: 1.6rem;
+    }
+
+    .features-description {
+      margin: 0 0 22px 0;
+      color: var(--body-text);
+      line-height: 1.6;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      min-height: 160px;
+      padding: 22px;
+      background-color: var(--card-background);
+      border: 1px solid var(--border-colour);
+      border-radius: 12px;
+      text-align: left;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent-colour);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 18px;
+      background-color: var(--accent-colour);
+      border-radius: 9px;
+      color: #111827;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .feature-title {
+      margin: 0 0 8px 0;
+      color: var(--main-text);
+      font-size: 1.05rem;
+    }
+
+    .feature-text {
+      margin: 0;
+      color: var(--body-text);
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
 
     footer {
@@ -161,6 +316,21 @@ class CryptoLensDashboard extends LitElement {
       color: white;
       text-align: center;
       border-top: 3px solid var(--accent-colour);
+    }
+
+    @media (max-width: 900px) {
+      .home-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        max-width: 500px;
+      }
+
+      .feature-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 650px) {
@@ -184,8 +354,29 @@ class CryptoLensDashboard extends LitElement {
         padding: 20px 14px;
       }
 
-      .page {
-        padding: 25px 20px;
+      .home-hero {
+        padding: 30px 22px;
+        gap: 30px;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .home-buttons {
+        flex-direction: column;
+      }
+
+      .action-button {
+        width: 100%;
+      }
+
+      .hero-visual {
+        padding: 20px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
       }
     }
   `;
@@ -263,33 +454,185 @@ class CryptoLensDashboard extends LitElement {
   renderHomePage() {
     return html`
       <section class="page">
-        <h2>
-          Understand cryptocurrency more easily
-        </h2>
+        <div class="home-hero">
+          <div class="hero-content">
+            <span class="hero-label">
+              Cryptocurrency Market Dashboard
+            </span>
 
-        <p>
-          Explore cryptocurrency prices, compare
-          digital assets, discover trending coins
-          and follow important crypto news in one
-          place.
-        </p>
+            <h2 class="hero-title">
+              Understand cryptocurrency
+              more easily.
+            </h2>
 
-        <div class="home-buttons">
-          <button
-            class="action-button primary-button"
-            @click=${() =>
-              this.changePage("market")}
-          >
-            Explore Market
-          </button>
+            <p class="hero-description">
+              Explore live market data, compare
+              cryptocurrencies, discover trending
+              assets and follow recent crypto news
+              from one simple dashboard.
+            </p>
 
-          <button
-            class="action-button"
-            @click=${() =>
-              this.changePage("compare")}
-          >
-            Compare Coins
-          </button>
+            <div class="home-buttons">
+              <button
+                class="action-button primary-button"
+                @click=${() =>
+                  this.changePage("market")}
+              >
+                Explore Market
+              </button>
+
+              <button
+                class="action-button"
+                @click=${() =>
+                  this.changePage("compare")}
+              >
+                Compare Coins
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <h3 class="visual-heading">
+              Your crypto market overview
+            </h3>
+
+            <div class="visual-row">
+              <span class="visual-label">
+                <span class="visual-dot"></span>
+                Market
+              </span>
+
+              <span class="visual-value">
+                Live prices
+              </span>
+            </div>
+
+            <div class="visual-row">
+              <span class="visual-label">
+                <span class="visual-dot"></span>
+                Compare
+              </span>
+
+              <span class="visual-value">
+                Side by side
+              </span>
+            </div>
+
+            <div class="visual-row">
+              <span class="visual-label">
+                <span class="visual-dot"></span>
+                Trending
+              </span>
+
+              <span class="visual-value">
+                Popular assets
+              </span>
+            </div>
+
+            <div class="visual-row">
+              <span class="visual-label">
+                <span class="visual-dot"></span>
+                News
+              </span>
+
+              <span class="visual-value">
+                Recent stories
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-features">
+          <h2 class="features-heading">
+            Explore CryptoLens
+          </h2>
+
+          <p class="features-description">
+            Use the tools below to explore the
+            cryptocurrency market.
+          </p>
+
+          <div class="feature-grid">
+            <div
+              class="feature-card"
+              @click=${() =>
+                this.changePage("market")}
+            >
+              <div class="feature-icon">
+                $
+              </div>
+
+              <h3 class="feature-title">
+                Market
+              </h3>
+
+              <p class="feature-text">
+                View cryptocurrency prices,
+                market caps, trading volume
+                and 24-hour changes.
+              </p>
+            </div>
+
+            <div
+              class="feature-card"
+              @click=${() =>
+                this.changePage("compare")}
+            >
+              <div class="feature-icon">
+                ↔
+              </div>
+
+              <h3 class="feature-title">
+                Compare
+              </h3>
+
+              <p class="feature-text">
+                Compare two cryptocurrencies
+                side by side using current
+                market information.
+              </p>
+            </div>
+
+            <div
+              class="feature-card"
+              @click=${() =>
+                this.changePage("trending")}
+            >
+              <div class="feature-icon">
+                ↑
+              </div>
+
+              <h3 class="feature-title">
+                Trending
+              </h3>
+
+              <p class="feature-text">
+                Discover cryptocurrencies
+                currently attracting attention
+                in the market.
+              </p>
+            </div>
+
+            <div
+              class="feature-card"
+              @click=${() =>
+                this.changePage("news")}
+            >
+              <div class="feature-icon">
+                N
+              </div>
+
+              <h3 class="feature-title">
+                News
+              </h3>
+
+              <p class="feature-text">
+                Follow recent cryptocurrency
+                stories from sources around
+                the world.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     `;
