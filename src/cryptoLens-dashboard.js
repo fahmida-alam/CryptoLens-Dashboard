@@ -6,6 +6,7 @@ import {
 
 import "./components/market-page.js";
 import "./components/trending-page.js";
+import "./components/compare-page.js";
 import "./components/toggle-theme.js";
 
 class CryptoLensDashboard extends LitElement {
@@ -297,10 +298,9 @@ class CryptoLensDashboard extends LitElement {
     }
 
     if (this.activePage === "compare") {
-      return this.renderPlaceholderPage(
-        "Compare Coins",
-        "The coin comparison feature will be added later.",
-      );
+      return html`
+        <compare-page></compare-page>
+      `;
     }
 
     if (this.activePage === "trending") {
