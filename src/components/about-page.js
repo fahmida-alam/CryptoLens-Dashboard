@@ -51,7 +51,6 @@ class AboutPage extends LitElement {
     }
 
     .developer-text {
-      max-width: 750px;
       margin: 0;
       line-height: 1.6;
     }
@@ -63,31 +62,27 @@ class AboutPage extends LitElement {
 
     .profile-links {
       display: flex;
-      gap: 12px;
-      margin-top: 20px;
+      gap: 24px;
+      margin-top: 18px;
     }
 
     .profile-link {
-      display: inline-block;
-      padding: 10px 18px;
-      border: 1px solid
-        var(--border-colour, #e5e7eb);
-      border-radius: 8px;
-      background-color: var(
-        --page-background,
-        #f9fafb
-      );
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       color: var(--main-text, #111827);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: bold;
       text-decoration: none;
     }
 
     .profile-link:hover {
-      border-color: var(
-        --accent-colour,
-        #facc15
-      );
+      color: var(--accent-colour, #facc15);
+      text-decoration: underline;
+    }
+
+    .external-icon {
+      font-size: 0.85rem;
     }
 
     .disclaimer {
@@ -111,10 +106,7 @@ class AboutPage extends LitElement {
 
       .profile-links {
         flex-direction: column;
-      }
-
-      .profile-link {
-        text-align: center;
+        gap: 12px;
       }
     }
   `;
@@ -164,6 +156,7 @@ class AboutPage extends LitElement {
               rel="noopener noreferrer"
             >
               GitHub
+              <span class="external-icon">↗</span>
             </a>
 
             <a
@@ -173,6 +166,7 @@ class AboutPage extends LitElement {
               rel="noopener noreferrer"
             >
               LinkedIn
+              <span class="external-icon">↗</span>
             </a>
           </div>
         </div>
