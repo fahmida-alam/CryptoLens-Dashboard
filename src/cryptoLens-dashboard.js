@@ -8,6 +8,7 @@ import "./components/market-page.js";
 import "./components/trending-page.js";
 import "./components/compare-page.js";
 import "./components/toggle-theme.js";
+import "./components/news-page.js";
 
 class CryptoLensDashboard extends LitElement {
   static properties = {
@@ -310,10 +311,9 @@ class CryptoLensDashboard extends LitElement {
     }
 
     if (this.activePage === "news") {
-      return this.renderPlaceholderPage(
-        "Crypto News",
-        "Recent cryptocurrency news will appear here.",
-      );
+      return html`
+        <news-page></news-page>
+      `;
     }
 
     if (this.activePage === "about") {

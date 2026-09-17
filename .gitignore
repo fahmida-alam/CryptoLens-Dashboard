@@ -15,7 +15,7 @@
 ## temp folders
 /.tmp/
 
-# build
+## build
 /_site/
 /dist/
 /out-tsc/
@@ -23,3 +23,6 @@
 storybook-static
 custom-elements.json
 *.code-workspace
+
+## API keys
+src/api-key.js
