@@ -9,6 +9,7 @@ import "./components/trending-page.js";
 import "./components/compare-page.js";
 import "./components/toggle-theme.js";
 import "./components/news-page.js";
+import "./components/about-page.js";
 
 class CryptoLensDashboard extends LitElement {
   static properties = {
@@ -317,10 +318,9 @@ class CryptoLensDashboard extends LitElement {
     }
 
     if (this.activePage === "about") {
-      return this.renderPlaceholderPage(
-        "About CryptoLens",
-        "CryptoLens helps users understand cryptocurrency market information.",
-      );
+      return html`
+        <about-page></about-page>
+      `;
     }
 
     return this.renderHomePage();
