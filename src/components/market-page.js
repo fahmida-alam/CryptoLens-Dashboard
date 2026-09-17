@@ -4,16 +4,9 @@ import {
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 
-import { BASE_URL_COINGECKO } from "../config.js";
-
-const MARKETS_URL =
-  `${BASE_URL_COINGECKO}/coins/markets` +
-  "?vs_currency=usd" +
-  "&order=market_cap_desc" +
-  "&per_page=50" +
-  "&page=1" +
-  "&sparkline=false" +
-  "&price_change_percentage=24h";
+import {
+  BASE_URL_COINGECKO,
+} from "../config.js";
 
 class MarketPage extends LitElement {
   static properties = {
@@ -21,6 +14,8 @@ class MarketPage extends LitElement {
     loading: { state: true },
     errorMessage: { state: true },
     searchText: { state: true },
+    currency: { state: true },
+    marketLimit: { state: true },
   };
 
   static styles = css`
@@ -271,6 +266,17 @@ class MarketPage extends LitElement {
     this.loading = true;
     this.errorMessage = "";
     this.searchText = "";
+
+    this.currency =
+      localStorage.getItem(
+        "cryptolens_currency",
+      ) || "usd";
+
+    this.marketLimit = Number(
+      localStorage.getItem(
+        "cryptolens_market_limit",
+      ) || "50",
+    );
   }
 
   connectedCallback() {
@@ -279,17 +285,39 @@ class MarketPage extends LitElement {
     this.fetchMarkets();
   }
 
+  getMarketsUrl() {
+    return (
+      `${BASE_URL_COINGECKO}/coins/markets` +
+      `?vs_currency=${this.currency}` +
+      "&order=market_cap_desc" +
+      "&per_page=50" +
+      "&page=1" +
+      "&sparkline=false" +
+      "&price_change_percentage=24h"
+    );
+  }
+
+  getCacheKey() {
+    return `market_coins_${this.currency}`;
+  }
+
+  getCacheTimeKey() {
+    return `market_coins_time_${this.currency}`;
+  }
+
   fetchMarkets(forceRefresh = false) {
     this.loading = true;
     this.errorMessage = "";
 
-    const cached = localStorage.getItem(
-      "market_coins",
-    );
+    const cacheKey = this.getCacheKey();
+    const cacheTimeKey =
+      this.getCacheTimeKey();
 
-    const cachedTime = localStorage.getItem(
-      "market_coins_time",
-    );
+    const cached =
+      localStorage.getItem(cacheKey);
+
+    const cachedTime =
+      localStorage.getItem(cacheTimeKey);
 
     let cachedCoins = [];
 
@@ -305,12 +333,9 @@ class MarketPage extends LitElement {
 
       cachedCoins = [];
 
+      localStorage.removeItem(cacheKey);
       localStorage.removeItem(
-        "market_coins",
-      );
-
-      localStorage.removeItem(
-        "market_coins_time",
+        cacheTimeKey,
       );
     }
 
@@ -318,7 +343,8 @@ class MarketPage extends LitElement {
       Array.isArray(cachedCoins) &&
       cachedCoins.length > 0 &&
       cachedTime &&
-      Date.now() - Number(cachedTime) < 300000;
+      Date.now() - Number(cachedTime) <
+        300000;
 
     if (!forceRefresh && cacheIsFresh) {
       this.coins = cachedCoins;
@@ -326,7 +352,7 @@ class MarketPage extends LitElement {
       return;
     }
 
-    fetch(MARKETS_URL)
+    fetch(this.getMarketsUrl())
       .then(function (res) {
         if (!res.ok) {
           throw new Error(
@@ -350,12 +376,12 @@ class MarketPage extends LitElement {
           this.coins = json;
 
           localStorage.setItem(
-            "market_coins",
+            cacheKey,
             JSON.stringify(json),
           );
 
           localStorage.setItem(
-            "market_coins_time",
+            cacheTimeKey,
             Date.now().toString(),
           );
 
@@ -385,11 +411,17 @@ class MarketPage extends LitElement {
   }
 
   getFilteredCoins() {
+    const displayedCoins =
+      this.coins.slice(
+        0,
+        this.marketLimit,
+      );
+
     if (!this.searchText) {
-      return this.coins;
+      return displayedCoins;
     }
 
-    return this.coins.filter(
+    return displayedCoins.filter(
       function (coin) {
         return (
           coin.name
@@ -403,22 +435,47 @@ class MarketPage extends LitElement {
     );
   }
 
+  getCurrencySymbol() {
+    if (this.currency === "eur") {
+      return "€";
+    }
+
+    if (this.currency === "gbp") {
+      return "£";
+    }
+
+    if (this.currency === "aud") {
+      return "A$";
+    }
+
+    return "$";
+  }
+
   formatPrice(value) {
     if (value == null) {
       return "—";
     }
 
+    const symbol =
+      this.getCurrencySymbol();
+
     if (value < 1) {
-      return `$${value.toLocaleString("en-US", {
-        minimumFractionDigits: 4,
-        maximumFractionDigits: 8,
-      })}`;
+      return `${symbol}${value.toLocaleString(
+        "en-US",
+        {
+          minimumFractionDigits: 4,
+          maximumFractionDigits: 8,
+        },
+      )}`;
     }
 
-    return `$${value.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+    return `${symbol}${value.toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    )}`;
   }
 
   formatCurrency(value) {
@@ -426,25 +483,28 @@ class MarketPage extends LitElement {
       return "—";
     }
 
+    const symbol =
+      this.getCurrencySymbol();
+
     if (value >= 1000000000000) {
-      return `$${(
+      return `${symbol}${(
         value / 1000000000000
       ).toFixed(2)}T`;
     }
 
     if (value >= 1000000000) {
-      return `$${(
+      return `${symbol}${(
         value / 1000000000
       ).toFixed(2)}B`;
     }
 
     if (value >= 1000000) {
-      return `$${(
+      return `${symbol}${(
         value / 1000000
       ).toFixed(2)}M`;
     }
 
-    return `$${value.toLocaleString(
+    return `${symbol}${value.toLocaleString(
       "en-US",
       {
         maximumFractionDigits: 2,
@@ -594,8 +654,9 @@ class MarketPage extends LitElement {
             </h2>
 
             <p class="market-description">
-              View the top 50 cryptocurrencies
-              ordered by market capitalisation.
+              View the top ${this.marketLimit}
+              cryptocurrencies ordered by market
+              capitalisation.
             </p>
           </div>
 

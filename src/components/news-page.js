@@ -17,6 +17,7 @@ class NewsPage extends LitElement {
     articles: { state: true },
     loading: { state: true },
     errorMessage: { state: true },
+    newsLimit: { state: true },
   };
 
   static styles = css`
@@ -192,6 +193,12 @@ class NewsPage extends LitElement {
     this.articles = [];
     this.loading = true;
     this.errorMessage = "";
+
+    this.newsLimit = Number(
+      localStorage.getItem(
+        "cryptolens_news_limit",
+      ) || "12",
+    );
   }
 
   connectedCallback() {
@@ -230,7 +237,10 @@ class NewsPage extends LitElement {
           }
 
           this.articles =
-            json.results.slice(0, 12);
+            json.results.slice(
+              0,
+              this.newsLimit,
+            );
 
           this.loading = false;
         }.bind(this),

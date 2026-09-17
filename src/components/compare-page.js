@@ -4,16 +4,9 @@ import {
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 
-import { BASE_URL_COINGECKO } from "../config.js";
-
-const MARKETS_URL =
-  `${BASE_URL_COINGECKO}/coins/markets` +
-  "?vs_currency=usd" +
-  "&order=market_cap_desc" +
-  "&per_page=50" +
-  "&page=1" +
-  "&sparkline=false" +
-  "&price_change_percentage=24h";
+import {
+  BASE_URL_COINGECKO,
+} from "../config.js";
 
 class ComparePage extends LitElement {
   static properties = {
@@ -22,6 +15,7 @@ class ComparePage extends LitElement {
     secondCoinId: { state: true },
     loading: { state: true },
     errorMessage: { state: true },
+    currency: { state: true },
   };
 
   static styles = css`
@@ -220,6 +214,11 @@ class ComparePage extends LitElement {
     this.secondCoinId = "";
     this.loading = true;
     this.errorMessage = "";
+
+    this.currency =
+      localStorage.getItem(
+        "cryptolens_currency",
+      ) || "usd";
   }
 
   connectedCallback() {
@@ -228,17 +227,39 @@ class ComparePage extends LitElement {
     this.fetchCoins();
   }
 
+  getMarketsUrl() {
+    return (
+      `${BASE_URL_COINGECKO}/coins/markets` +
+      `?vs_currency=${this.currency}` +
+      "&order=market_cap_desc" +
+      "&per_page=50" +
+      "&page=1" +
+      "&sparkline=false" +
+      "&price_change_percentage=24h"
+    );
+  }
+
+  getCacheKey() {
+    return `market_coins_${this.currency}`;
+  }
+
+  getCacheTimeKey() {
+    return `market_coins_time_${this.currency}`;
+  }
+
   fetchCoins() {
     this.loading = true;
     this.errorMessage = "";
 
-    const cached = localStorage.getItem(
-      "market_coins",
-    );
+    const cacheKey = this.getCacheKey();
+    const cacheTimeKey =
+      this.getCacheTimeKey();
 
-    const cachedTime = localStorage.getItem(
-      "market_coins_time",
-    );
+    const cached =
+      localStorage.getItem(cacheKey);
+
+    const cachedTime =
+      localStorage.getItem(cacheTimeKey);
 
     let cachedCoins = [];
 
@@ -247,14 +268,25 @@ class ComparePage extends LitElement {
         ? JSON.parse(cached)
         : [];
     } catch (error) {
+      console.error(
+        "Could not read cached compare data:",
+        error,
+      );
+
       cachedCoins = [];
+
+      localStorage.removeItem(cacheKey);
+      localStorage.removeItem(
+        cacheTimeKey,
+      );
     }
 
     const cacheIsFresh =
       Array.isArray(cachedCoins) &&
       cachedCoins.length > 0 &&
       cachedTime &&
-      Date.now() - Number(cachedTime) < 300000;
+      Date.now() - Number(cachedTime) <
+        300000;
 
     if (cacheIsFresh) {
       this.coins = cachedCoins;
@@ -265,7 +297,7 @@ class ComparePage extends LitElement {
       return;
     }
 
-    fetch(MARKETS_URL)
+    fetch(this.getMarketsUrl())
       .then(function (res) {
         if (!res.ok) {
           throw new Error(
@@ -289,12 +321,12 @@ class ComparePage extends LitElement {
           this.coins = json;
 
           localStorage.setItem(
-            "market_coins",
+            cacheKey,
             JSON.stringify(json),
           );
 
           localStorage.setItem(
-            "market_coins_time",
+            cacheTimeKey,
             Date.now().toString(),
           );
 
@@ -310,6 +342,8 @@ class ComparePage extends LitElement {
             error,
           );
 
+          this.coins = [];
+
           this.errorMessage =
             "Could not load cryptocurrency data.";
 
@@ -320,23 +354,46 @@ class ComparePage extends LitElement {
 
   setDefaultCoins() {
     if (this.coins.length >= 2) {
-      this.firstCoinId = this.coins[0].id;
-      this.secondCoinId = this.coins[1].id;
+      this.firstCoinId =
+        this.coins[0].id;
+
+      this.secondCoinId =
+        this.coins[1].id;
     }
   }
 
   handleFirstCoin(event) {
-    this.firstCoinId = event.target.value;
+    this.firstCoinId =
+      event.target.value;
   }
 
   handleSecondCoin(event) {
-    this.secondCoinId = event.target.value;
+    this.secondCoinId =
+      event.target.value;
   }
 
   getCoin(coinId) {
-    return this.coins.find(function (coin) {
-      return coin.id === coinId;
-    });
+    return this.coins.find(
+      function (coin) {
+        return coin.id === coinId;
+      },
+    );
+  }
+
+  getCurrencySymbol() {
+    if (this.currency === "eur") {
+      return "€";
+    }
+
+    if (this.currency === "gbp") {
+      return "£";
+    }
+
+    if (this.currency === "aud") {
+      return "A$";
+    }
+
+    return "$";
   }
 
   formatPrice(value) {
@@ -344,17 +401,26 @@ class ComparePage extends LitElement {
       return "—";
     }
 
+    const symbol =
+      this.getCurrencySymbol();
+
     if (value < 1) {
-      return `$${value.toLocaleString("en-US", {
-        minimumFractionDigits: 4,
-        maximumFractionDigits: 8,
-      })}`;
+      return `${symbol}${value.toLocaleString(
+        "en-US",
+        {
+          minimumFractionDigits: 4,
+          maximumFractionDigits: 8,
+        },
+      )}`;
     }
 
-    return `$${value.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+    return `${symbol}${value.toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    )}`;
   }
 
   formatCurrency(value) {
@@ -362,25 +428,30 @@ class ComparePage extends LitElement {
       return "—";
     }
 
+    const symbol =
+      this.getCurrencySymbol();
+
     if (value >= 1000000000000) {
-      return `$${(
+      return `${symbol}${(
         value / 1000000000000
       ).toFixed(2)}T`;
     }
 
     if (value >= 1000000000) {
-      return `$${(
+      return `${symbol}${(
         value / 1000000000
       ).toFixed(2)}B`;
     }
 
     if (value >= 1000000) {
-      return `$${(
+      return `${symbol}${(
         value / 1000000
       ).toFixed(2)}M`;
     }
 
-    return `$${value.toLocaleString("en-US")}`;
+    return `${symbol}${value.toLocaleString(
+      "en-US",
+    )}`;
   }
 
   formatPercentage(value) {
@@ -577,7 +648,8 @@ class ComparePage extends LitElement {
 
           <p class="compare-description">
             Select two cryptocurrencies to compare
-            their current market information.
+            their current market information in
+            ${this.currency.toUpperCase()}.
           </p>
         </div>
 
