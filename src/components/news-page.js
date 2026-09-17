@@ -124,6 +124,11 @@ class NewsPage extends LitElement {
       color: var(--main-text, #111827);
       font-size: 1.05rem;
       line-height: 1.4;
+
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
     }
 
     .article-description {
