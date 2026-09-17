@@ -5,6 +5,7 @@ import {
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 
 import "./components/market-page.js";
+import "./components/trending-page.js";
 import "./components/toggle-theme.js";
 
 class CryptoLensDashboard extends LitElement {
@@ -180,7 +181,8 @@ class CryptoLensDashboard extends LitElement {
   constructor() {
     super();
 
-    const savedTheme = localStorage.getItem("cryptolens_theme");
+    const savedTheme =
+      localStorage.getItem("cryptolens_theme");
 
     this.darkMode = savedTheme === "dark";
     this.activePage = "home";
@@ -203,20 +205,27 @@ class CryptoLensDashboard extends LitElement {
   }
 
   applyTheme() {
-    this.classList.toggle("dark-mode", this.darkMode);
+    this.classList.toggle(
+      "dark-mode",
+      this.darkMode,
+    );
 
     document.body.style.margin = "0";
 
-    document.body.style.backgroundColor = this.darkMode
-      ? "#0f172a"
-      : "#ffffff";
+    document.body.style.backgroundColor =
+      this.darkMode
+        ? "#0f172a"
+        : "#ffffff";
   }
 
   changePage(pageName) {
     this.activePage = pageName;
   }
 
-  renderNavigationButton(pageName, buttonText) {
+  renderNavigationButton(
+    pageName,
+    buttonText,
+  ) {
     const buttonClass =
       this.activePage === pageName
         ? "nav-button active"
@@ -225,7 +234,8 @@ class CryptoLensDashboard extends LitElement {
     return html`
       <button
         class=${buttonClass}
-        @click=${() => this.changePage(pageName)}
+        @click=${() =>
+          this.changePage(pageName)}
       >
         ${buttonText}
       </button>
@@ -235,25 +245,30 @@ class CryptoLensDashboard extends LitElement {
   renderHomePage() {
     return html`
       <section class="page">
-        <h2>Understand cryptocurrency more easily</h2>
+        <h2>
+          Understand cryptocurrency more easily
+        </h2>
 
         <p>
-          Explore cryptocurrency prices, compare digital assets,
-          discover trending coins and follow important crypto news
-          in one place.
+          Explore cryptocurrency prices, compare
+          digital assets, discover trending coins
+          and follow important crypto news in one
+          place.
         </p>
 
         <div class="home-buttons">
           <button
             class="action-button primary-button"
-            @click=${() => this.changePage("market")}
+            @click=${() =>
+              this.changePage("market")}
           >
             Explore Market
           </button>
 
           <button
             class="action-button"
-            @click=${() => this.changePage("compare")}
+            @click=${() =>
+              this.changePage("compare")}
           >
             Compare Coins
           </button>
@@ -262,7 +277,10 @@ class CryptoLensDashboard extends LitElement {
     `;
   }
 
-  renderPlaceholderPage(title, description) {
+  renderPlaceholderPage(
+    title,
+    description,
+  ) {
     return html`
       <section class="page">
         <h2>${title}</h2>
@@ -286,10 +304,9 @@ class CryptoLensDashboard extends LitElement {
     }
 
     if (this.activePage === "trending") {
-      return this.renderPlaceholderPage(
-        "Trending Coins",
-        "Trending cryptocurrency data will appear here.",
-      );
+      return html`
+        <trending-page></trending-page>
+      `;
     }
 
     if (this.activePage === "news") {
@@ -323,17 +340,41 @@ class CryptoLensDashboard extends LitElement {
         </div>
 
         <toggle-theme
-          @theme-change=${this.handleThemeChange}
+          @theme-change=${this
+            .handleThemeChange}
         ></toggle-theme>
       </header>
 
       <nav>
-        ${this.renderNavigationButton("home", "Home")}
-        ${this.renderNavigationButton("market", "Market")}
-        ${this.renderNavigationButton("compare", "Compare")}
-        ${this.renderNavigationButton("trending", "Trending")}
-        ${this.renderNavigationButton("news", "News")}
-        ${this.renderNavigationButton("about", "About")}
+        ${this.renderNavigationButton(
+          "home",
+          "Home",
+        )}
+
+        ${this.renderNavigationButton(
+          "market",
+          "Market",
+        )}
+
+        ${this.renderNavigationButton(
+          "compare",
+          "Compare",
+        )}
+
+        ${this.renderNavigationButton(
+          "trending",
+          "Trending",
+        )}
+
+        ${this.renderNavigationButton(
+          "news",
+          "News",
+        )}
+
+        ${this.renderNavigationButton(
+          "about",
+          "About",
+        )}
       </nav>
 
       <main>
@@ -341,7 +382,8 @@ class CryptoLensDashboard extends LitElement {
       </main>
 
       <footer>
-        CryptoLens Web Development Project &copy; 2026
+        CryptoLens Web Development Project
+        &copy; 2026
       </footer>
     `;
   }
