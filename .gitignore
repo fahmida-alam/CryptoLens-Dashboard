@@ -26,3 +26,6 @@ custom-elements.json
 
 ## API keys
 src/api-key.js
+
+## Cloudflare Wrangler
+.wrangler/

@@ -4,14 +4,6 @@ import {
   css,
 } from "https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js";
 
-import {
-  BASE_URL_NEWSDATA,
-} from "../config.js";
-
-import {
-  NEWSDATA_API_KEY,
-} from "../api-key.js";
-
 class NewsPage extends LitElement {
   static properties = {
     articles: { state: true },
@@ -221,11 +213,7 @@ class NewsPage extends LitElement {
     this.loading = true;
     this.errorMessage = "";
 
-    const newsUrl =
-      `${BASE_URL_NEWSDATA}` +
-      `?apikey=${NEWSDATA_API_KEY}`;
-
-    fetch(newsUrl)
+    fetch("/api/news")
       .then(function (res) {
         if (!res.ok) {
           throw new Error(

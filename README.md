@@ -4,6 +4,12 @@ CryptoLens is a responsive cryptocurrency dashboard for exploring market data, c
 
 The application uses live cryptocurrency data from CoinGecko and crypto news from NewsData.io.
 
+## Live Website
+
+CryptoLens is deployed using Cloudflare Pages.
+
+**Live site:** https://cryptolens-dashboard.pages.dev/
+
 ![CryptoLens Home](./img/home-screenshot.png)
 
 ## Features
@@ -51,6 +57,8 @@ News cards display article titles, descriptions, publication information, and li
 
 Users can choose to display 6, 9, or 12 news articles.
 
+The NewsData.io API request is handled through a Cloudflare Pages Function so the API key is not exposed in the client-side JavaScript.
+
 ![CryptoLens News](./img/news-screenshot.png)
 
 ### User Preferences
@@ -78,6 +86,8 @@ Preferences are stored locally in the browser using `localStorage`.
 - Web Components
 - CoinGecko API
 - NewsData.io API
+- Cloudflare Pages
+- Cloudflare Pages Functions
 - Browser Local Storage
 
 ## APIs
@@ -92,12 +102,18 @@ https://www.coingecko.com/en/api
 
 CryptoLens uses the NewsData.io Crypto News API to retrieve recent cryptocurrency news.
 
+The NewsData API key is stored as a Cloudflare environment secret and is accessed only by the server-side Pages Function.
+
 https://newsdata.io/
 
 ## Project Structure
 
 ```text
 CryptoLens-Dashboard/
+├── functions/
+│   └── api/
+│       └── news.js
+│
 ├── img/
 │   ├── CryptoLens_Icon.png
 │   ├── home-screenshot.png
@@ -117,7 +133,6 @@ CryptoLens-Dashboard/
 │   │   ├── toggle-theme.js
 │   │   └── trending-page.js
 │   │
-│   ├── api-key.js
 │   ├── config.js
 │   └── cryptoLens-dashboard.js
 │
@@ -141,30 +156,65 @@ Move into the project directory:
 cd CryptoLens-Dashboard
 ```
 
-Because CryptoLens uses JavaScript modules, run the project through a local web server rather than opening `index.html` directly.
+Install the project dependencies:
 
-For example, you can use the Live Server extension in Visual Studio Code.
+```bash
+npm install
+```
 
-## NewsData API Key Setup
+Because CryptoLens uses JavaScript modules and a Cloudflare Pages Function for cryptocurrency news, the application should be run through an appropriate local development server.
 
-CryptoLens requires a NewsData.io API key to load cryptocurrency news.
+## NewsData API Key
 
-The API key is intentionally excluded from the GitHub repository.
+CryptoLens does not store the NewsData API key in client-side JavaScript.
 
-Create the following file:
+For the deployed application, the API key is stored securely as a Cloudflare Pages secret named:
 
 ```text
-src/api-key.js
+NEWSDATA_API_KEY
 ```
 
-Add your NewsData API key:
+The Cloudflare Pages Function located at:
 
-```javascript
-export const NEWSDATA_API_KEY =
-  "YOUR_NEWSDATA_API_KEY";
+```text
+functions/api/news.js
 ```
 
-The `api-key.js` file is included in `.gitignore`, preventing the API key from being committed to the repository.
+reads the secret on the server and sends the cryptocurrency news data back to the application through:
+
+```text
+/api/news
+```
+
+This prevents the NewsData API key from being included directly in the browser-side source code.
+
+## Deployment
+
+CryptoLens is deployed using Cloudflare Pages.
+
+To authenticate Wrangler with Cloudflare:
+
+```bash
+npx wrangler login
+```
+
+To add the NewsData API key securely to the Cloudflare Pages project:
+
+```bash
+npx wrangler pages secret put NEWSDATA_API_KEY --project-name=cryptolens-dashboard
+```
+
+When prompted, enter the NewsData API key as the secret value.
+
+To deploy the application:
+
+```bash
+npx wrangler pages deploy . --project-name=cryptolens-dashboard
+```
+
+After making changes, the application can be redeployed using the same deployment command.
+
+**Live application:** https://cryptolens-dashboard.pages.dev/
 
 ## Developer
 

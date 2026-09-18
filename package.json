@@ -5,5 +5,8 @@
   "main": "index.html",
   "scripts": {},
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "wrangler": "^4.134.0"
+  }
 }
