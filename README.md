@@ -97,7 +97,7 @@ https://newsdata.io/
 ## Project Structure
 
 ```text
-CryptoLens/
+CryptoLens-Dashboard/
 ├── img/
 │   ├── CryptoLens_Icon.png
 │   ├── home-screenshot.png
@@ -132,13 +132,13 @@ CryptoLens/
 Clone the repository:
 
 ```bash
-git clone https://github.com/fahmida-alam/CryptoLens.git
+git clone https://github.com/fahmida-alam/CryptoLens-Dashboard.git
 ```
 
 Move into the project directory:
 
 ```bash
-cd CryptoLens
+cd CryptoLens-Dashboard
 ```
 
 Because CryptoLens uses JavaScript modules, run the project through a local web server rather than opening `index.html` directly.
