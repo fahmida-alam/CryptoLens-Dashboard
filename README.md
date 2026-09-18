@@ -19,7 +19,7 @@ Browse current cryptocurrency market information including:
 - Cryptocurrency ranking
 - Search by cryptocurrency name or symbol
 
-Users can display the Top 10, Top 25, or Top 50 cryptocurrencies.
+Users can choose to display the Top 10, Top 25, or Top 50 cryptocurrencies.
 
 ![CryptoLens Market](./img/market-screenshot.png)
 
@@ -39,19 +39,25 @@ The comparison includes:
 
 ### Trending Cryptocurrencies
 
-Discover cryptocurrencies that are currently attracting attention using CoinGecko's trending market data.
+Discover cryptocurrencies that are currently attracting attention using CoinGecko's trending cryptocurrency data.
+
+![CryptoLens Trending](./img/trending-screenshot.png)
 
 ### Cryptocurrency News
 
 Follow recent cryptocurrency stories from sources around the world.
 
-News cards provide article titles, descriptions, publication information, and links to the original articles.
+News cards display article titles, descriptions, publication information, and links to the original articles.
+
+Users can choose to display 6, 9, or 12 news articles.
 
 ![CryptoLens News](./img/news-screenshot.png)
 
 ### User Preferences
 
-CryptoLens allows users to customize their experience with:
+CryptoLens includes a dedicated Settings page where users can customize their experience.
+
+Available preferences include:
 
 - Light and dark themes
 - USD, AUD, EUR, and GBP currencies
@@ -60,6 +66,8 @@ CryptoLens allows users to customize their experience with:
 - Reset preferences option
 
 Preferences are stored locally in the browser using `localStorage`.
+
+![CryptoLens Settings](./img/settings-screenshot.png)
 
 ## Technologies
 
@@ -91,11 +99,13 @@ https://newsdata.io/
 ```text
 CryptoLens/
 ├── img/
-│   ├── CryptoLens Icon.png
+│   ├── CryptoLens_Icon.png
 │   ├── home-screenshot.png
 │   ├── market-screenshot.png
 │   ├── compare-screenshot.png
-│   └── news-screenshot.png
+│   ├── trending-screenshot.png
+│   ├── news-screenshot.png
+│   └── settings-screenshot.png
 │
 ├── src/
 │   ├── components/
@@ -113,6 +123,7 @@ CryptoLens/
 │
 ├── .gitignore
 ├── index.html
+├── package.json
 └── README.md
 ```
 
@@ -136,7 +147,9 @@ For example, you can use the Live Server extension in Visual Studio Code.
 
 ## NewsData API Key Setup
 
-The NewsData API key is intentionally excluded from the repository.
+CryptoLens requires a NewsData.io API key to load cryptocurrency news.
+
+The API key is intentionally excluded from the GitHub repository.
 
 Create the following file:
 
@@ -151,7 +164,7 @@ export const NEWSDATA_API_KEY =
   "YOUR_NEWSDATA_API_KEY";
 ```
 
-The `api-key.js` file is included in `.gitignore` so the API key is not committed to the repository.
+The `api-key.js` file is included in `.gitignore`, preventing the API key from being committed to the repository.
 
 ## Developer
 
